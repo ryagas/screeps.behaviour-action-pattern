@@ -28,9 +28,9 @@ mod.extend = function(){
             }
         }
     };
-    
-    // Check if a creep has body parts of a certain type anf if it is still active. 
-    // Accepts a single part type (like RANGED_ATTACK) or an array of part types. 
+
+    // Check if a creep has body parts of a certain type anf if it is still active.
+    // Accepts a single part type (like RANGED_ATTACK) or an array of part types.
     // Returns true, if there is at least any one part with a matching type present and active.
     Creep.prototype.hasActiveBodyparts = function(partTypes){
         if(Array.isArray(partTypes))
@@ -308,6 +308,13 @@ mod.extend = function(){
                 this.move(this.pos.getDirectionTo(new RoomPosition(path[0].x,path[0].y,path[0].roomName)));
         }
     };
+    Creep.prototype.cancelAction = function() {
+        delete this.data.actionName;
+        delete this.data.targetId;
+        this.action = null;
+        this.target = null;
+        delete this.data.path;
+    };
     Creep.prototype.repairNearby = function( ) {
         // if it has energy and a work part, remoteMiners do repairs once the source is exhausted.
         if(this.carry.energy > 0 && this.hasActiveBodyparts(WORK) && this.data && this.data.creepType !== 'remoteMiner') {
@@ -315,7 +322,7 @@ mod.extend = function(){
             if( nearby && nearby.length ){
                 if( DEBUG && TRACE ) trace('Creep', {creepName:this.name, Action:'repairing', Creep:'repairNearby'}, nearby[0].pos);
                 if( this.repair(nearby[0]) === OK && this.carry.energy <= this.getActiveBodyparts(WORK) * REPAIR_POWER / REPAIR_COST ) {
-                    Creep.action.idle.assign(this);
+                    this.cancelAction();
                 }
             } else {
                 if( DEBUG && TRACE ) trace('Creep', {creepName:this.name, Action:'repairing', Creep:'repairNearby'}, 'none');
@@ -330,7 +337,7 @@ mod.extend = function(){
                     if( nearby && nearby.length ){
                         if( DEBUG && TRACE ) trace('Creep', {creepName:this.name, Action:'building', Creep:'buildNearby'}, nearby[0].pos);
                         if( this.build(nearby[0]) === OK && this.carry.energy <= this.getActiveBodyparts(WORK) * BUILD_POWER ) {
-                            Creep.action.idle.assign(this);
+                            this.cancelAction();
                         }
                     } else {
                         if( DEBUG && TRACE ) trace('Creep', {creepName:this.name, Action:'building', Creep:'buildNearby'}, 'none');
@@ -341,7 +348,7 @@ mod.extend = function(){
             if( DEBUG && TRACE ) trace('Creep', {creepName:this.name, pos:this.pos, Action:'repairing', Creep:'repairNearby'}, 'no WORK');
         }
     };
-    
+
     Creep.prototype.controllerSign = function() {
         if(CONTROLLER_SIGN && (!this.room.controller.sign || this.room.controller.sign.username != this.owner.username)) {
             this.signController(this.room.controller, CONTROLLER_SIGN_MESSAGE);
@@ -378,7 +385,7 @@ mod.extend = function(){
                 }
                 return this._sum;
             }
-        }, 
+        },
         'threat': {
             configurable: true,
             get: function() {
@@ -491,7 +498,7 @@ mod.compileBody = function (room, params, sort = true) {
     for (let iPart = 0; iPart < params.fixedBody.length; iPart++) {
         parts[parts.length] = params.fixedBody[iPart];
     }
-    if( sort ) parts.sort(Creep.partsComparator);            
+    if( sort ) parts.sort(Creep.partsComparator);
     if( parts.includes(HEAL) ) {
         let index = parts.indexOf(HEAL);
         parts.splice(index, 1);
