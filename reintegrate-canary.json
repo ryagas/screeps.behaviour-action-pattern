@@ -1,0 +1,27 @@
+{
+  "ocs.internal": {
+    "reset": "upstream/dev",
+    "merge": [
+      "upstream/feature/healAlly",
+      "upstream/feature/coreHits"
+    ]
+  },
+  "ocs.public": {
+    "reset": "upstream/dev",
+    "merge": [
+      "upstream/bug/strategyUndef",
+      "upstream/fix/remoteHaulersForget",
+      "upstream/hotfix/PioneerGoesHome",
+      "Spedwards/fix/moving",
+      "upstream/feature/deliveryTask",
+      "upstream/bug/strategyIdsArray",
+      "upstream/change/miningReservers",
+      "upstream/feature/coreHits",
+      "upstream/major/borderTravel",
+      "upstream/feature/deliveryTask",
+      "upstream/fix/SKKCircular",
+      "OverlordQ/feature/sortByDistance",
+      "upstream/bug/pioneerMinWeight"
+    ]
+  }
+}
