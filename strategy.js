@@ -34,7 +34,7 @@ mod.decorateAgent = function(prototype, ...definitions) {
         }
         return key;
     };
-    prototype.strategy = function(...ids) {
+    prototype.strategy = function(ids) {
         const key = this.strategyKey(ids);
 
         let strategy = mod.getCachedStrategy(this, key);
